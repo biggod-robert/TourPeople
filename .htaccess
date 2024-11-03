@@ -1,0 +1,37 @@
+RewriteEngine On
+
+# Excluir archivos estáticos de las redirecciones
+RewriteCond %{REQUEST_URI} !\.(css|js|jpg|png|gif|woff|woff2|ttf|eot)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirigir intalador-db
+RewriteRule ^intalador-db/ intaladorDB.php [L]
+RewriteRule ^inicio/ view/home.php [L]
+RewriteRule ^login/ view/login.php [L]
+RewriteRule ^reset-password/ view/resetPass.php [L]
+RewriteRule ^nueva-clave/ view/newPassword.php [L]
+RewriteRule ^registro/ view/newRegistro.php [L]
+RewriteRule ^salir/ controller/salir.php [L]
+RewriteRule ^dashboard/ controller/controller.php?seccion=1 [L]
+RewriteRule ^admin-hoteles/ controller/controller.php?seccion=2 [L]
+RewriteRule ^inicio-usuarios/ controller/controller.php?seccion=3 [L]
+RewriteRule ^detalle-sitio/([0-9]+)/?$ controller/controller.php?seccion=4&id_noticia=$1 [L]
+RewriteRule ^hoteles/ controller/controller.php?seccion=5 [L]
+RewriteRule ^detalle-hotel/([0-9]+)/?$ controller/controller.php?seccion=6&id_noticia=$1 [L]
+RewriteRule ^buypro/ view/buyPro.php [L]
+
+# Forzar el tipo MIME correcto para JS
+AddType application/javascript .js
+
+# Compresión de archivos JavaScript
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/javascript
+</IfModule>
+
+# Caching de archivos estáticos
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+</IfModule>

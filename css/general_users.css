@@ -1,0 +1,38 @@
+#carouselImages {
+    width: 100%;
+    /* Ajusta el ancho del carrusel */
+    max-height: 400px;
+    /* Ajusta la altura máxima del carrusel */
+    overflow: hidden;
+    /* Oculta cualquier contenido que se desborde */
+}
+
+#carouselImages .carousel-inner {
+    height: 100%;
+    /* Hace que el contenedor interno del carrusel use toda la altura */
+}
+
+#carouselImages img {
+    width: 100%;
+    /* Asegúrate de que las imágenes ocupen el ancho completo */
+    max-height: 400px;
+    /* Ajusta la altura máxima de las imágenes */
+    object-fit: cover;
+    /* Mantiene la proporción de aspecto y recorta si es necesario */
+}
+
+.carousel-item {
+    transition: transform 0.5s ease;
+    /* Ajusta este valor para cambiar la velocidad */
+}
+
+#quill-editor {
+    display: none;
+    /* Oculta el editor completo */
+}
+
+.ql-toolbar,
+.ql-container {
+    display: none;
+    /* Por si Quill añade otros elementos visibles */
+}

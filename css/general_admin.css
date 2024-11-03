@@ -1,0 +1,115 @@
+.previewImgPortada {
+    width: 100%;
+    height: 250px;
+    /* Altura fija, ajustable según diseño */
+    border: 2px dashed #ccc;
+    /* Borde estilo previsualización */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+.previewImgPortada img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* Ajuste de imagen sin perder proporciones */
+}
+
+
+/* img evidencia */
+
+.cap-img {
+    margin-left: 18px;
+    cursor: pointer;
+    color: #ffffff;
+    border-radius: 4px;
+    padding: 7px;
+    background-color: #17c1e8;
+    border-color: #17c1e8;
+}
+
+.previewEvide {
+    width: 100%;
+    background: #e1e0e0;
+    min-height: 83px;
+    border: dashed 3px #727171;
+    border-radius: 10px;
+}
+
+.imgEvide {
+    width: 100%;
+    height: 185px;
+    cursor: zoom-in;
+    margin: auto;
+}
+
+.viewFullImg {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: #0a0a0ac9;
+    z-index: 9999;
+    display: flex;
+}
+
+.c-full-view {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 2rem;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.btnDelete {
+    position: relative;
+    top: 151px;
+    right: 31px;
+    color: #ea0606;
+    cursor: pointer;
+}
+
+.contImgUP {
+    margin: auto;
+    display: flex;
+}
+
+.cap-img {
+    margin-left: 18px;
+    cursor: pointer;
+    color: #ffffff;
+    border-radius: 4px;
+    padding: 7px;
+    background-color: #17c1e8;
+    border-color: #17c1e8;
+}
+
+
+/* validacion del form */
+
+.select_error {
+    border-color: #ff0707 !important;
+    box-shadow: 0 0 0 2px #dd7474 !important;
+}
+
+.msj-error {
+    color: aliceblue;
+}
+
+.igmError {
+    border: dashed 3px #ed1212 !important;
+}
+
+.igmErrorCap {
+    border: solid 2px #db0808 !important;
+}
+
+.rowdes {
+    margin-bottom: 75px !important;
+}

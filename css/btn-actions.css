@@ -1,0 +1,59 @@
+.multi-button button {
+    font-size: 1rem;
+    background: #0094ff;
+    border: 0px solid #A0AEC0;
+    margin: .1em;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+    box-shadow: 0 0 0 #BEE3F8;
+    transform: translateY(0);
+    padding: 5px;
+}
+
+.multi-button button:first-of-type {
+    border-radius: .5em 0 0 .5em;
+}
+
+.multi-button button:last-of-type {
+    border-radius: 0 .5em .5em 0;
+}
+
+.multi-button button i {
+    color: #ffffff;
+    transition: all .2s ease-out;
+}
+
+.multi-button:hover button {
+    color: #e7e7e7;
+}
+
+.multi-button:hover button:hover {
+    background: #51d53f;
+    color: #fff;
+    box-shadow: 0 0 0.8em 0 rgba(63, 213, 113, 0.8);
+    transform: translateY(-.2em);
+}
+
+.multi-button:hover button i {
+    color: #CBD5E0;
+}
+
+.multi-button:hover button:hover i {
+    color: #FED7E2;
+    transform: rotate(-10deg);
+}
+
+.multi-button {
+    width: 7rem;
+}
+
+
+/* boton de ver desccripcion */
+
+.des-see {
+    cursor: pointer;
+}
+
+.des-see:hover {
+    width: 30px !important;
+    height: 30px !important;
+}

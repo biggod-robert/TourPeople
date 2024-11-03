@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DashBoard Admin</title>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logo.png" />
+    <link rel="stylesheet" href="../assets/css/dashboard.min.css" />
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- date table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- quill -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <!-- sweetalert -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.css"
+        integrity="sha512-n1PBkhxQLVIma0hnm731gu/40gByOeBjlm5Z/PgwNxhJnyW1wYG8v7gPJDT6jpk0cMHfL8vUGUVjz3t4gXyZYQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- loader -->
+    <link rel="stylesheet" href="../assets/css/loader.css">
+    <!-- botones de accion de las tablas -->
+    <link rel="stylesheet" href="../css/btn-actions.css">
+    <!-- styles general sitio  -->
+    <link rel="stylesheet" href="../css/general_admin.css">
+</head>
+
+<body>
+    <!-- loader -->
+    <div class="conLoader" id="loader">
+        <span class="loader"></span>
+    </div>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a href="./index.html" class="text-nowrap logo-img">
+                        <img src="../assets/images/logo.png" width="180" alt="" />
+                    </a>
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-8"></i>
+                    </div>
+                </div>
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                    <ul id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">SITIOS</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?php if ($seccion == 1) echo 'active'; ?>" href="../dashboard/" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-layout-dashboard"></i>
+                                </span>
+                                <span class="hide-menu">Administrar Sitios</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Hoteles</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?php if ($seccion == 2) echo 'active'; ?>" href="../admin-hoteles/" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-article"></i>
+                                </span>
+                                <span class="hide-menu">Administrar Hoteles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <header class="app-header">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <ul class="navbar-nav">
+                        <li class="nav-item d-block d-xl-none">
+                            <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                                <i class="ti ti-menu-2"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="../upload/imgUsers/<?php echo $_SESSION['user_tour']['imagen']; ?>" alt="" width="35" height="35" class="rounded-circle">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                                    <div class="message-body">
+                                        <a href="../salir/" class="btn btn-outline-primary mx-3 mt-2 d-block salir">salir</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!--  Header End -->
+
+            <div class="container-fluid">
+                <!-- Main start -->
+                <main>
+                    <!-- dentro del main se incluye el contenido -->
+                    <?php include $contenido; ?>
+                </main>
+                <!-- Main End -->
+
+                <!-- Footer Start -->
+                <footer>
+                    <div class="py-6 px-6 text-center">
+                        <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart.com</a></p>
+                    </div>
+                </footer>
+                <!--Footer End -->
+            </div>
+        </div>
+    </div>
+    <!-- jquery librari f-->
+    <script src="../assets/js/jquery-3.3.1.min.js"></script>
+    <!-- cdn js de sweet alert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.14.4/sweetalert2.min.js" integrity="sha512-a/ljmGyCvVDl+QZXCxw/6hKcG4V7Syo7qmb9lUFTwrP12lCCItvQKeTMBMjtpa+3RE6UZ7gk+/IZzj4H04y4ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- scrips del main.js -->
+    <script src="../js/main.js"></script>
+    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/sidebarmenu.js"></script>
+    <script src="../assets/js/app.min.js"></script>
+    <script src="../assets/js/simplebar.min.js"></script>
+    <script src="../js/main.js"></script>
+
+    <!-- date table -->
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-responsive/3.0.1/dataTables.responsive.min.js"
+        integrity="sha512-2YUF27Q7apMJr/4vcblWXDB29lBlDA79tfj7iulxFBglr8NMndjYVZ3SFFVkTt8T2CAwe6QjUdm4qHpOABKDxA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- quill js -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-delta-to-html"></script>
+    <!-- scrips sitios -->
+    <?php
+    if ($seccion == 1) {
+    ?>
+        <script src="../js/adminSitios.js"></script>
+    <?php
+    }
+    ?>
+    <!-- scrips hoteles -->
+    <?php
+    if ($seccion == 2) {
+    ?>
+        <script src="../js/adminHoteles.js"></script>
+    <?php
+    }
+    ?>
+    <!-- scrips hoteles -->
+    <?php
+    if ($seccion == 2) {
+    ?>
+        <script src="../js/adminHoteles.js"></script>
+    <?php
+    }
+    ?>
+
+</body>
+
+</html>

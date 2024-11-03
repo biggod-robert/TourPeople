@@ -1,0 +1,149 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title fw-semibold mb-9">Tus Sitios <button type="button" class="btn btn-outline-dark m-1 addsitio">Nuevo Sitio</button></h5>
+        <div class="table-responsive">
+            <table class="table" id="tabla_sitios">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalSitio" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal">Modal title</h5>
+            </div>
+            <form id="formSitios">
+                <input type="hidden" id="id_sitioEdit" name="id_sitioEdit">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="nombreSitio" class="form-label">Nombre del sitio</label>
+                                <input type="text" name="nombreSitio" id="nombreSitio" class="form-control" placeholder="" aria-describedby="helpId" required />
+                                <small id="helpId" class="text-muted">Escriba el titulo del sitio</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label">Direccion</label>
+                                <input type="text" name="direccion" id="direccion" class="form-control" placeholder="" aria-describedby="helpId" required />
+                                <small id="helpId" class="text-muted">Digite la direccion de sitio</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="enlace_reservas" class="form-label">Enlaces de reservas</label>
+                                <input type="text" name="enlace_reservas" id="enlace_reservas" class="form-control" placeholder="" aria-describedby="helpId" required />
+                                <small id="helpId" class="text-muted">ingrese el enlace para que los usuarios realicen reservas</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="imgPortada" class="form-label">Imagen de Portada</label>
+                                <input type="file" name="imgPortada" id="imgPortada" class="form-control" accept="image/*" placeholder="" aria-describedby="helpId" required />
+                                <small id="helpId" class="text-muted">Seleciona la Imagen de portada</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="" class="form-label">Imagen Selecionada</label>
+                                <div class="previewImgPortada">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="mb-2">Imagenes <samp class="cap-img btn bg-gradient-info" imgCapturadas="0"> cargar <i
+                                        class="fas fa-camera-retro"></i></samp></label>
+                            <div class="previewEvide">
+                                <div class="row justify-content-center align-items-center" id="cont-previu">
+                                    <!-- imgs se se van capturando -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row rowdes">
+                        <div class="col-md-12">
+                            <label for="" class="form-label">Descripcion de la Noticia</label>
+                            <div id="toolbar-container">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-script" value="sub"></button>
+                                    <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-header" value="2"></button>
+                                    <button class="ql-blockquote"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-direction" value="rtl"></button>
+                                    <select class="ql-align"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div id="editorDescripcion">
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="viewFullImg esconder">
+    <i class="fas fa-times c-full-view"></i>
+    <img id="imgFullViewSRC" src="" class="img-fluid m-auto" alt="">
+</div>
