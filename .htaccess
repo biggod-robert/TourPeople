@@ -19,6 +19,7 @@ RewriteRule ^inicio-usuarios/ controller/controller.php?seccion=3 [L]
 RewriteRule ^detalle-sitio/([0-9]+)/?$ controller/controller.php?seccion=4&id_noticia=$1 [L]
 RewriteRule ^hoteles/ controller/controller.php?seccion=5 [L]
 RewriteRule ^detalle-hotel/([0-9]+)/?$ controller/controller.php?seccion=6&id_noticia=$1 [L]
+RewriteRule ^admin-restaurantes/ controller/controller.php?seccion=7 [L]
 RewriteRule ^buypro/ view/buyPro.php [L]
 
 # Forzar el tipo MIME correcto para JS

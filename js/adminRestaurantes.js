@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var contador = 0; // Se permiten hasta 6 imágenes
-    var opcion = 1; // Esta opción trae las imágenes
+    var opcion = 1; // Esta opción trae los restaurantes
     var imagenesSeleccionadas = []; // Guardar las imágenes seleccionadas
 
     // Cargo los restaurantes ya publicados
@@ -10,6 +10,10 @@ $(document).ready(function() {
             method: "POST",
             data: { opcion: opcion },
             dataSrc: "",
+            error: function (xhr, error, thrown) {
+                console.error("DataTables error:", error);
+                console.log("Response Text:", xhr.responseText);
+            }
         },
         columns: [
             { data: "id_restaurante" },
@@ -19,7 +23,9 @@ $(document).ready(function() {
                 className: "align-middle text-center text-sm td-respon"
             },
         ],
-        "order": [[0, "desc"]],
+        "order": [
+            [0, "desc"]
+        ],
         responsive: {
             details: {
                 display: $.fn.dataTable.Responsive.display.childRowImmediate,
@@ -79,6 +85,7 @@ $(document).ready(function() {
                         imagenesSeleccionadas.push(file);
 
                         var reader = new FileReader();
+
                         reader.onload = function(event) {
                             var imgSrc = event.target.result;
                             var img = $('<img>').attr({
@@ -103,16 +110,13 @@ $(document).ready(function() {
                                 $('#imgFullViewSRC').attr("src", url);
                                 $('.viewFullImg').removeClass('esconder');
                             });
-
-                            // Cerrar el visualizador de imagen
-                            $('.c-full-view').click(function() {
-                                $('.viewFullImg').addClass('esconder');
-                            });
                         };
+
                         reader.readAsDataURL(file);
                     }
                 }
             });
+
             input.click();
         } else {
             alert('No se pueden agregar más de 6 imágenes.');
@@ -153,7 +157,7 @@ $(document).ready(function() {
             syntax: true,
             toolbar: '#toolbar-container',
         },
-        placeholder: 'Escribe la descripcion de tu restaurante',
+        placeholder: 'Escribe la descripción del restaurante',
         theme: 'snow',
     });
 
@@ -164,6 +168,7 @@ $(document).ready(function() {
         if (contador == 0) {
             $(".cap-img").addClass('igmErrorCap');
             $(".previewEvide").addClass('igmErrorCap');
+
             setTimeout(() => {
                 $(".cap-img").removeClass('igmErrorCap');
                 $(".previewEvide").removeClass('igmErrorCap');
@@ -193,6 +198,7 @@ $(document).ready(function() {
 
         const formulario = document.getElementById("formRestaurantes");
         const FormSolicitud = new FormData(formulario);
+
         let quillContent = quill.getContents();
         FormSolicitud.append("opcion", opcion);
         FormSolicitud.append("descripcion", JSON.stringify(quillContent));
@@ -228,15 +234,6 @@ $(document).ready(function() {
                         html: data.mensaje,
                     });
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                $("#loader").addClass("esconder");
-                $("body").removeClass("hidenn");
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Error en la solicitud: " + textStatus + " - " + errorThrown
-                });
             }
         });
     });
@@ -244,13 +241,6 @@ $(document).ready(function() {
     // Cerrar el visualizador de imagen
     $('.c-full-view').click(function() {
         $('.viewFullImg').addClass('esconder');
-    });
-
-    // Ver imagen en pantalla completa
-    $(document).on('click', '.imgEvide', function() {
-        var url = $(this).attr('src');
-        $('#imgFullViewSRC').attr("src", url);
-        $('.viewFullImg').removeClass('esconder');
     });
 
     // Limpiar el formulario
@@ -268,14 +258,17 @@ $(document).ready(function() {
     $(document).on('click', '.editRestaurante', function(e) {
         e.preventDefault();
         var row = $(this).closest("tr");
+
         if (row.hasClass("child")) {
             row = row.prev();
         }
+
         var data = tabla_restaurantes.row(row).data();
         var idRestaurante = data.id_restaurante;
         opcion = 3;
         $('#titulo-modal').text('Editar Restaurante');
         clearFormRestaurantes();
+
         $('#imgPortada').removeAttr('required');
 
         $.ajax({
@@ -293,8 +286,8 @@ $(document).ready(function() {
                         var restaurante = respuesta.data;
                         $('#id_restauranteEdit').val(restaurante.id_restaurante);
                         $('#nombreRestaurante').val(restaurante.nombre);
-                        $('#direccion').val(restaurante.ubi_restaurante);
-                        $('#enlace_reservas').val(restaurante.enlace_reservas_turs);
+                        $('#direccion').val(restaurante.direccion);
+                        $('#enlace_reservas').val(restaurante.enlace_reservas);
                         quill.setContents(JSON.parse(restaurante.descripcion));
 
                         var imgPortadaUrl = '../upload/restaurantes/portadas/' + restaurante.imgPortada;
@@ -320,24 +313,7 @@ $(document).ready(function() {
                     }
                 } catch (error) {
                     console.error("Error al decodificar JSON: ", error, resp);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "Error al procesar la respuesta del servidor"
-                    });
                 }
-                $("#loader").addClass("esconder");
-                $("body").removeClass("hidenn");
-            },
-            error: function(xhr, status, error) {
-                console.error("Error en la petición AJAX: ", error);
-                $("#loader").addClass("esconder");
-                $("body").removeClass("hidenn");
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Error al cargar los datos del restaurante"
-                });
             }
         });
 
@@ -362,8 +338,6 @@ $(document).ready(function() {
                     var respuesta = JSON.parse(resp);
                     if (respuesta.codigo === 1) {
                         element.closest('.col-md-4').remove();
-                        contador--;
-                        $('.cap-img').attr('imgCapturadas', contador);
                         Swal.fire({
                             icon: "success",
                             title: "EXITO",
@@ -386,16 +360,6 @@ $(document).ready(function() {
                 }
                 $("#loader").addClass("esconder");
                 $("body").removeClass("hidenn");
-            },
-            error: function(xhr, status, error) {
-                console.error("Error en la petición AJAX: ", error);
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Ocurrió un error al intentar eliminar la imagen."
-                });
-                $("#loader").addClass("esconder");
-                $("body").removeClass("hidenn");
             }
         });
     });
@@ -404,8 +368,65 @@ $(document).ready(function() {
     $(document).on('click', '.deleteRestaurante', function(e) {
         e.preventDefault();
         var row = $(this).closest("tr");
+
         if (row.hasClass("child")) {
             row = row.prev();
         }
+
         var data = tabla_restaurantes.row(row).data();
-        var idRestauranteDelete =
+        var idRestauranteDelete = data.id_restaurante;
+        var opcion = 6;
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡Este restaurante se eliminará permanentemente!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "../controller/adminRestaurantes.php",
+                    data: { opcion: opcion, idRestauranteDelete: idRestauranteDelete },
+                    beforeSend: function() {
+                        $("#loader").removeClass("esconder");
+                        $("body").addClass("hidenn");
+                    },
+                    success: function(resp) {
+                        $("#loader").addClass("esconder");
+                        $("body").removeClass("hidenn");
+                        var respuesta = JSON.parse(resp);
+                        if (respuesta.codigo === 1) {
+                            tabla_restaurantes.row(row).remove().draw();
+                            Swal.fire({
+                                icon: "success",
+                                title: "Éxito",
+                                text: respuesta.mensaje
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: respuesta.mensaje
+                            });
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $("#loader").addClass("esconder");
+                        $("body").removeClass("hidenn");
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "Error en la solicitud: " + textStatus + " - " + errorThrown
+                        });// Mensaje de error
+                    }
+                });
+            }
+        });
+    });
+
+});

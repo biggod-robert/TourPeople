@@ -126,7 +126,7 @@ $(document).ready(function() {
                 }
             });
 
-            input.click(); 
+            input.click();
         } else {
             alert('No se pueden agregar más de 6 imágenes.');
         }

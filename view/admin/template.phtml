@@ -81,6 +81,14 @@
                                 <span class="hide-menu">Administrar Hoteles</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?php if ($seccion == 7) echo 'active'; ?>" href="../admin-restaurantes/" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-layout-dashboard"></i>
+                                </span>
+                                <span class="hide-menu">Administrar Restaurantes</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -172,11 +180,11 @@
     <?php
     }
     ?>
-    <!-- scrips hoteles -->
+    <!-- scrips restaurantes -->
     <?php
-    if ($seccion == 2) {
+    if ($seccion == 7) {
     ?>
-        <script src="../js/adminHoteles.js"></script>
+        <script src="../js/adminRestaurantes.js"></script>
     <?php
     }
     ?>
