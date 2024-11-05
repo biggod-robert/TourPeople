@@ -55,8 +55,8 @@ function sendCodeByEmail($correo, $codigo)
         // Configuración para localhost
         $mail->Host  = 'smtp.gmail.com'; // Servidor SMTP de Gmail
         $mail->SMTPAuth  = true; // Identificación SMTP
-        $mail->Username  = 'robertmoor2003@gmail.com'; // Usuario SMTP
-        $mail->Password  = ''; // Contraseña de aplicación generada
+        $mail->Username  = 'licethsofiasevilla123456@gmail.com'; // Usuario SMTP
+        $mail->Password  = 'mcyw exno ipmu yaup'; // Contraseña de aplicación generada
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Habilitar cifrado TLS
         $mail->Port  = 587; // Puerto para TLS
 

@@ -355,7 +355,7 @@ $(document).ready(function() {
 
         $('#modalSitio').modal('show');
     });
-
+    
     // Borrar imagen desde la base de datos
     $('#cont-previu').on('click', '.deteleteimgDB', function() {
         var idImagen = $(this).attr('data-id'); // Obtener el ID de la imagen
