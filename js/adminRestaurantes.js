@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var contador = 0; // Se permiten hasta 6 imágenes
-    var opcion = 1; // Esta opción trae los restaurantes
+    var opcion = 1; // Esta opción trae las imágenes
     var imagenesSeleccionadas = []; // Guardar las imágenes seleccionadas
 
     // Cargo los restaurantes ya publicados
@@ -10,14 +10,11 @@ $(document).ready(function() {
             method: "POST",
             data: { opcion: opcion },
             dataSrc: "",
-            error: function (xhr, error, thrown) {
-                console.error("DataTables error:", error);
-                console.log("Response Text:", xhr.responseText);
-            }
         },
         columns: [
             { data: "id_restaurante" },
             { data: "nombre" },
+            { data: "ubi_restaurante" },
             {
                 defaultContent: "<div class='multi-button mx-auto'><button><i class='fas fa-trash deleteRestaurante'></i></button><button><i class='fa-regular fa-pen-to-square editRestaurante'></i></button></div>",
                 className: "align-middle text-center text-sm td-respon"
@@ -36,7 +33,7 @@ $(document).ready(function() {
     });
 
     // Opción para agregar un nuevo restaurante
-    $('.addrestaurante').click(function(e) {
+    $('.addRestaurante').click(function(e) {
         e.preventDefault();
         opcion = 2; // La opción 2 refiere a agregar un nuevo restaurante
         clearFormRestaurantes();
@@ -51,11 +48,13 @@ $(document).ready(function() {
 
         if (file) {
             const reader = new FileReader();
+
             reader.onload = function(e) {
                 $(".previewImgPortada").empty();
                 const imgElement = $("<img>").attr("src", e.target.result);
                 $(".previewImgPortada").append(imgElement);
             };
+
             reader.readAsDataURL(file);
         }
     });
@@ -198,7 +197,6 @@ $(document).ready(function() {
 
         const formulario = document.getElementById("formRestaurantes");
         const FormSolicitud = new FormData(formulario);
-
         let quillContent = quill.getContents();
         FormSolicitud.append("opcion", opcion);
         FormSolicitud.append("descripcion", JSON.stringify(quillContent));
@@ -286,11 +284,11 @@ $(document).ready(function() {
                         var restaurante = respuesta.data;
                         $('#id_restauranteEdit').val(restaurante.id_restaurante);
                         $('#nombreRestaurante').val(restaurante.nombre);
-                        $('#direccion').val(restaurante.direccion);
-                        $('#enlace_reservas').val(restaurante.enlace_reservas);
-                        quill.setContents(JSON.parse(restaurante.descripcion));
+                        $('#ubicacion').val(restaurante.ubi_restaurante);
+                        $('#enlace_reservas').val(restaurante.enlace_reservas_rest);
+                        quill.setContents(JSON.parse(restaurante.descripcion_restaurante));
 
-                        var imgPortadaUrl = '../upload/restaurantes/portadas/' + restaurante.imgPortada;
+                        var imgPortadaUrl = '../upload/restaurantes/portadas/' + restaurante.foto;
                         $(".previewImgPortada").html('<img src="' + imgPortadaUrl + '" class="img-thumbnail">');
 
                         restaurante.imagenes.forEach(function(imagen, index) {
@@ -336,6 +334,7 @@ $(document).ready(function() {
             success: function(resp) {
                 try {
                     var respuesta = JSON.parse(resp);
+
                     if (respuesta.codigo === 1) {
                         element.closest('.col-md-4').remove();
                         Swal.fire({
@@ -358,6 +357,16 @@ $(document).ready(function() {
                         text: "Error en la respuesta del servidor."
                     });
                 }
+                $("#loader").addClass("esconder");
+                $("body").removeClass("hidenn");
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la petición AJAX: ", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Ocurrió un error al intentar eliminar la imagen."
+                });
                 $("#loader").addClass("esconder");
                 $("body").removeClass("hidenn");
             }

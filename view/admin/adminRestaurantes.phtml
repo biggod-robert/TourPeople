@@ -1,26 +1,25 @@
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title fw-semibold mb-9">Tus Restaurantes <button type="button"
-                class="btn btn-outline-dark m-1 addrestaurante">Nuevo Restaurante</button></h5>
+        <h5 class="card-title fw-semibold mb-9">Tus Restaurantes <button type="button" class="btn btn-outline-dark m-1 addRestaurante">Nuevo Restaurante</button></h5>
+
         <div class="table-responsive">
             <table class="table" id="tabla_restaurantes">
                 <thead>
                     <tr>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ubicación</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="modalRestaurante" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modalRestaurante" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -32,29 +31,25 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="nombreRestaurante" class="form-label">Nombre del restaurante</label>
-                                <input type="text" name="nombreRestaurante" id="nombreRestaurante" class="form-control"
-                                    placeholder="" aria-describedby="helpId" required />
-                                <small id="helpId" class="text-muted">Escriba el título del restaurante</small>
+                                <label for="nombreRestaurante" class="form-label">Nombre del Restaurante</label>
+                                <input type="text" name="nombreRestaurante" id="nombreRestaurante" class="form-control" placeholder="" aria-describedby="helpId" required />
+                                <small id="helpId" class="text-muted">Escriba el nombre del restaurante</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="direccion" class="form-label">Dirección</label>
-                                <input type="text" name="direccion" id="direccion" class="form-control" placeholder=""
-                                    aria-describedby="helpId" required />
-                                <small id="helpId" class="text-muted">Digite la dirección del restaurante</small>
+                                <label for="ubicacion" class="form-label">Ubicación</label>
+                                <input type="text" name="ubicacion" id="ubicacion" class="form-control" placeholder="" aria-describedby="helpId" required />
+                                <small id="helpId" class="text-muted">Digite la ubicación del restaurante</small>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="enlace_reservas" class="form-label">Enlaces de reservas</label>
-                                <input type="text" name="enlace_reservas" id="enlace_reservas" class="form-control"
-                                    placeholder="" aria-describedby="helpId" required />
-                                <small id="helpId" class="text-muted">Ingrese el enlace para que los usuarios realicen
-                                    reservas</small>
+                                <label for="enlace_reservas" class="form-label">Enlace de reservas</label>
+                                <input type="text" name="enlace_reservas" id="enlace_reservas" class="form-control" placeholder="" aria-describedby="helpId" required />
+                                <small id="helpId" class="text-muted">Ingrese el enlace para que los usuarios realicen reservas</small>
                             </div>
                         </div>
                     </div>
@@ -62,8 +57,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="imgPortada" class="form-label">Imagen de Portada</label>
-                                <input type="file" name="imgPortada" id="imgPortada" class="form-control"
-                                    accept="image/*" placeholder="" aria-describedby="helpId" required />
+                                <input type="file" name="imgPortada" id="imgPortada" class="form-control" accept="image/*" placeholder="" aria-describedby="helpId" required />
                                 <small id="helpId" class="text-muted">Selecciona la Imagen de portada</small>
                             </div>
                         </div>
@@ -71,15 +65,13 @@
                             <div class="mb-3">
                                 <label for="" class="form-label">Imagen Seleccionada</label>
                                 <div class="previewImgPortada">
-
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="mb-2">Imágenes <samp class="cap-img btn bg-gradient-info" imgCapturadas="0">
-                                    cargar <i class="fas fa-camera-retro"></i></samp></label>
+                            <label class="mb-2">Imágenes adicionales <samp class="cap-img btn bg-gradient-info" imgCapturadas="0"> cargar <i class="fas fa-camera-retro"></i></samp></label>
                             <div class="previewEvide">
                                 <div class="row justify-content-center align-items-center" id="cont-previu">
                                     <!-- imgs se se van capturando -->
@@ -130,10 +122,8 @@
                                 <span class="ql-formats">
                                     <button class="ql-clean"></button>
                                 </span>
-
                             </div>
                             <div id="editorDescripcion">
-
                             </div>
                         </div>
                     </div>

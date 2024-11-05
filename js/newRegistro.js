@@ -23,7 +23,7 @@ $(document).ready(function() {
         const regexDocumento = /^\d{1,15}$/; // Solo números, hasta 15 dígitos
         const regexNombreApellido = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/; // Solo letras y espacios
         const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Formato de correo
-        const regexClave = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/; // Mínimo 6 caracteres, al menos una letra y un número
+        const regexClave = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W]{6,}$/; // Mínimo 6 caracteres, al menos una letra y un número
         const regexEdad = /^[1-9][0-9]?$/; // Edad entre 1 y 99
         const regexTelefono = /^\+?[0-9]{10,15}$/; // Teléfono en formato internacional (opcional + y entre 10 a 15 dígitos)
 

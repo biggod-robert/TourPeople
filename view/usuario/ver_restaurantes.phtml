@@ -1,0 +1,36 @@
+<div class="card">
+    <!-- Carrusel de imágenes -->
+    <div id="carouselImages" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+        <div class="carousel-inner">
+            <!-- Imágenes del carrusel se cargarán aquí dinámicamente desde JS -->
+        </div>
+        <!-- Controles del carrusel -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Contenido de la tarjeta -->
+    <div class="card-body">
+        <!-- Título del restaurante -->
+        <h5 id="titulo" class="card-title">Título del Restaurante</h5>
+
+        <!-- Ubicación del restaurante -->
+        <p id="ubicacion" class="card-text"><strong>Ubicación:</strong> Dirección del Restaurante</p>
+
+        <!-- Descripción del restaurante -->
+        <p id="descripcion" class="card-text">
+            <!-- La descripción se cargará aquí desde el Quill -->
+        </p>
+
+        <!-- Botón de reservas -->
+        <a id="enlaceReservas" href="#" class="btn btn-primary" target="_blank">contactar ahora</a>
+    </div>
+</div>
+
+<div id="quill-editor" class="escoder" style="display: none;"></div> <!-- Ocultamos el editor -->

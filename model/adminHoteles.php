@@ -61,7 +61,7 @@ function hoteles( $conexion, $opcion, $id_documento, $nombreHotel, $descripcion,
                 $ejecutar->execute();
 
 
-                // Obtener el ID de la última sitio insertada
+                // Obtener el ID de la última sitio insertado
                 $id_hotel = $conexion->lastInsertId();
 
                 // Procesar imágenes adicionales

@@ -25,16 +25,16 @@ $(document).ready(function() {
             host.reportValidity();
             isValid = false;
         }
-
-        // Validar el campo Usuario (solo letras y números, mínimo 3 caracteres)
+        // Validar el campo Usuario (solo letras, números, y ciertos caracteres especiales, mínimo 3 caracteres)
         const user = $("#user")[0];
-        const userRegex = /^[a-zA-Z0-9]{3,}$/;
+        const userRegex = /^[a-zA-Z0-9_\-!@#\$%\^&\*\(\)\+\=\.\,]{3,}$/;
         if (!user.value.match(userRegex)) {
-            user.setCustomValidity("El usuario debe tener al menos 3 caracteres y solo puede contener letras y números.");
+            user.setCustomValidity("El usuario debe tener al menos 3 caracteres y solo puede contener letras, números y ciertos caracteres especiales (-!@#$%^&*()+=.,).");
             user.reportValidity();
             isValid = false;
+        } else {
+            user.setCustomValidity(""); // Limpia el mensaje de validación en caso de éxito
         }
-
 
         // Validar el campo Nombre de la base de datos (solo letras, números, y guiones bajos)
         const nameDB = $("#nameDB")[0];

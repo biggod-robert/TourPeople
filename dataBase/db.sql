@@ -151,6 +151,17 @@ CREATE TABLE `tb_imgRestaurantes` (
     CONSTRAINT `fk_img_restaurantes` FOREIGN KEY (`id_restaurante`) REFERENCES `tb_restaurantes` (`id_restaurante`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
+
+-- Tabla de Likes para restaurantes
+CREATE TABLE `tb_like_restaurantes` (
+    `id_like` INT AUTO_INCREMENT,
+    `id_documento` INT(15) NOT NULL,
+    `id_restaurante` INT NOT NULL,
+    PRIMARY KEY (`id_like`),
+    CONSTRAINT `fk_like_rest_user` FOREIGN KEY (`id_documento`) REFERENCES `tb_users` (`id_documento`) ON DELETE CASCADE,
+    CONSTRAINT `fk_like_rest_restaurante` FOREIGN KEY (`id_restaurante`) REFERENCES `tb_restaurantes` (`id_restaurante`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
 -- Tabla de Likes para Sitios
 CREATE TABLE `tb_like_sitios` (
     `id_like` INT AUTO_INCREMENT,
@@ -170,15 +181,6 @@ CREATE TABLE `tb_like_hoteles` (
     CONSTRAINT `fk_like_hotel_hotel` FOREIGN KEY (`id_hotel`) REFERENCES `tb_hoteles` (`id_hotel`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
--- Tabla de Likes para restaurantes
-CREATE TABLE `tb_like_restaurantes` (
-    `id_like` INT AUTO_INCREMENT,
-    `id_documento` INT(15) NOT NULL,
-    `id_restaurante` INT NOT NULL,
-    PRIMARY KEY (`id_like`),
-    CONSTRAINT `fk_like_rest_user` FOREIGN KEY (`id_documento`) REFERENCES `tb_users` (`id_documento`) ON DELETE CASCADE,
-    CONSTRAINT `fk_like_rest_restaurante` FOREIGN KEY (`id_restaurante`) REFERENCES `tb_restaurantes` (`id_restaurante`) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- Eliminar la función buscarUsuario si existe
 DROP FUNCTION IF EXISTS `buscarUsuario`;
