@@ -144,7 +144,7 @@ $(document).ready(function() {
                     case "0101a":
                         window.location.href = "../dashboard/";
                         break;
-                    case "0101u":
+                    case "1001u":
                         window.location.href = "../inicio-usuarios/";
                         break;
                     case "0102w":

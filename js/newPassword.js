@@ -43,14 +43,6 @@ $(document).ready(function() {
                         icon: "success",
                         title: "ÉXITO",
                         html: data.mensaje,
-                        allowOutsideClick: false, // No permite cerrar al hacer clic fuera del modal
-                        allowEscapeKey: false, // No permite cerrar con la tecla ESC
-                        showCancelButton: false, // No muestra botón de cancelar
-                        confirmButtonText: 'Aceptar', // Texto del botón de confirmar
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '../login/'; // Redirigir al login al aceptar
-                        }
                     });
                 } else {
                     Swal.fire({

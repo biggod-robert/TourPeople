@@ -38,6 +38,9 @@ class path
             case 6:
                 $result = 'verHotel.phtml';
                 break;
+            case 7:
+                $result = 'adminRestaurantes.phtml';
+                break;
             default:
                 # code...
                 break;

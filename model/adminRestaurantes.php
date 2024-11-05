@@ -15,276 +15,257 @@
  * @param string $descripcion Descripción del restaurante.
  * @param array $imgPortada Imagen de portada del restaurante.
  * @param string $direccion Dirección del restaurante.
- * @param string $enlace_reservas URL para reservas del restaurante.
+ * @param string $telefono Teléfono del restaurante.
+ * @param string $horario Horario de atención del restaurante.
  * @param array $imgRestaurante Imágenes adicionales del restaurante.
- * @param int $idrestaurante ID del restaurante a recuperar o editar.
+ * @param int $idRestaurante ID del restaurante a recuperar o editar.
  * @param int $idImagen ID de la imagen a eliminar.
  * @param int $id_restauranteEdit ID del restaurante a actualizar.
- * @param int $idrestauranteDelete ID del restaurante a eliminar.
+ * @param int $idRestauranteDelete ID del restaurante a eliminar.
  * 
  * @return array Resultado de la operación con códigos y mensajes.
  */
-function restaurantes($conexion, $opcion, $id_documento, $nombreRestaurante, $descripcion, $imgPortada, $direccion, $enlace_reservas, $imgRestaurante, $idrestaurante, $idImagen, $id_restauranteEdit, $idrestauranteDelete) {
-    $salida = "";
-    switch ($opcion) {
-        case 1:
-            // Obtener restaurantes subidos por el usuario
-            $sql = "SELECT * FROM tb_restaurantes WHERE id_documento = :id_documento";
-            $ejecutar = $conexion->prepare($sql);
-            $ejecutar->bindParam(':id_documento', $id_documento, PDO::PARAM_INT);
-            $ejecutar->execute();
-            $salida = $ejecutar->fetchAll(PDO::FETCH_ASSOC);
+function restaurantes($conexion, $opcion, $id_documento, $nombreRestaurante, $descripcion, $imgPortada, $direccion, $enlace_reservas, $imgRestaurante, $idrestaurante, $idImagen, $id_restauranteEdit, $idRestauranteDelete) {
+    $data = [];
+    
+    switch($opcion) {
+        case 1: // Listar restaurantes
+            $consulta = "SELECT id_restaurante, nombre FROM restaurantes WHERE id_documento = ?";
+            $statement = $conexion->prepare($consulta);
+            $statement->execute([$id_documento]);
+            $data = $statement->fetchAll(PDO::FETCH_ASSOC);
             break;
-
-        case 2:
-            // Se inserta un nuevo restaurante
-            $imageFileType = strtolower(pathinfo($imgPortada['name'], PATHINFO_EXTENSION));
-            $newFileName = uniqid('img_', true) . '.' . $imageFileType;
-            $target_dir_portada = "../upload/restaurantes/portadas/";
-            $target_file_portada = $target_dir_portada . $newFileName;
-
-            if (move_uploaded_file($imgPortada['tmp_name'], $target_file_portada)) {
-                // Insertar restaurante
-                $sql = "INSERT INTO `tb_restaurantes` (`nombre`, `descripcion_restaurante`, `ubi_restaurante`, `enlace_reservas_rest`, `foto`, `id_documento`) 
-                        VALUES (:nombre, :descripcion, :direccion, :enlace_reservas, :imgPortada, :id_documento)";
-                $ejecutar = $conexion->prepare($sql);
-                $ejecutar->bindParam(':nombre', $nombreRestaurante, PDO::PARAM_STR);
-                $ejecutar->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
-                $ejecutar->bindParam(':imgPortada', $newFileName, PDO::PARAM_STR);
-                $ejecutar->bindParam(':direccion', $direccion, PDO::PARAM_STR);
-                $ejecutar->bindParam(':enlace_reservas', $enlace_reservas, PDO::PARAM_STR);
-                $ejecutar->bindParam(':id_documento', $id_documento, PDO::PARAM_INT);
-                $ejecutar->execute();
-
-                // Obtener el ID del último restaurante insertado
-                $id_restaurante = $conexion->lastInsertId();
-
-                // Procesar imágenes adicionales
-                if (!empty($imgRestaurante) && isset($imgRestaurante['name'])) {
-                    $filesCount = count($imgRestaurante['name']);
-                    $target_dir_img = "../upload/restaurantes/images/";
-
-                    for ($i = 0; $i < $filesCount; $i++) {
-                        if ($imgRestaurante['error'][$i] == UPLOAD_ERR_OK) {
-                            $imgName = $imgRestaurante['name'][$i];
-                            $imageFileType = strtolower(pathinfo($imgName, PATHINFO_EXTENSION));
-                            $newFileName = uniqid('img_', true) . '.' . $imageFileType;
-                            $target_file_img = $target_dir_img . $newFileName;
-
-                            if (move_uploaded_file($imgRestaurante['tmp_name'][$i], $target_file_img)) {
-                                $sql = "INSERT INTO tb_imgRestaurantes (img, id_restaurante) VALUES (:img, :id_restaurante)";
-                                $ejecutar = $conexion->prepare($sql);
-                                $ejecutar->bindParam(':img', $newFileName, PDO::PARAM_STR);
-                                $ejecutar->bindParam(':id_restaurante', $id_restaurante, PDO::PARAM_INT);
-                                $ejecutar->execute();
-                            }
-                        }
-                    }
-                }
-                $salida = array("codigo" => 1, "mensaje" => "Se agregó el restaurante correctamente.");
-            } else {
-                $salida = array("codigo" => 0, "mensaje" => "Error al subir la imagen de portada.");
-            }
-            break;
-
-        case 3:
-            // Obtener un restaurante por su ID
-            $sqlRestaurante = "SELECT * FROM tb_restaurantes WHERE id_restaurante = :idrestaurante";
-            $ejecutarRestaurante = $conexion->prepare($sqlRestaurante);
-            $ejecutarRestaurante->bindParam(':idrestaurante', $idrestaurante, PDO::PARAM_INT);
-            $ejecutarRestaurante->execute();
-            $restaurante = $ejecutarRestaurante->fetch(PDO::FETCH_ASSOC);
-
-            if ($restaurante) {
-                // Obtener las imágenes asociadas
-                $sqlImagenes = "SELECT id_img, img FROM tb_imgRestaurantes WHERE id_restaurante = :idrestaurante";
-                $ejecutarImagenes = $conexion->prepare($sqlImagenes);
-                $ejecutarImagenes->bindParam(':idrestaurante', $idrestaurante, PDO::PARAM_INT);
-                $ejecutarImagenes->execute();
-                $imagenes = $ejecutarImagenes->fetchAll(PDO::FETCH_ASSOC);
-
-                $restauranteConImagenes = array(
-                    "id_restaurante" => $restaurante['id_restaurante'],
-                    "nombre" => $restaurante['nombre'],
-                    "descripcion" => $restaurante['descripcion_restaurante'],
-                    "imgPortada" => $restaurante['foto'],
-                    "ubi_restaurante" => $restaurante['ubi_restaurante'],
-                    "enlace_reservas_rest" => $restaurante['enlace_reservas_rest'],
-                    "imagenes" => $imagenes
-                );
-
-                $salida = array("codigo" => 1, "data" => $restauranteConImagenes);
-            } else {
-                $salida = array("codigo" => 0, "mensaje" => "Restaurante no encontrado.");
-            }
-            break;
-
-        case 4:
-            // Eliminar imagen por ID
-            if ($idImagen !== null) {
-                $sqlImg = "SELECT img FROM tb_imgRestaurantes WHERE id_img = :idImagen";
-                $ejecutarImg = $conexion->prepare($sqlImg);
-                $ejecutarImg->bindParam(':idImagen', $idImagen, PDO::PARAM_INT);
-                $ejecutarImg->execute();
-                $imagen = $ejecutarImg->fetch(PDO::FETCH_ASSOC);
-
-                if ($imagen) {
-                    $rutaImagen = "../upload/restaurantes/images/" . $imagen['img'];
-                    
-                    $sqlDelete = "DELETE FROM tb_imgRestaurantes WHERE id_img = :idImagen";
-                    $ejecutarDelete = $conexion->prepare($sqlDelete);
-                    $ejecutarDelete->bindParam(':idImagen', $idImagen, PDO::PARAM_INT);
-                    $ejecutarDelete->execute();
-
-                    if ($ejecutarDelete->rowCount() > 0) {
-                        if (file_exists($rutaImagen) && unlink($rutaImagen)) {
-                            $salida = array("codigo" => 1, "mensaje" => "Imagen eliminada correctamente.");
-                        } else {
-                            $salida = array("codigo" => 0, "mensaje" => "Error al eliminar el archivo de imagen.");
-                        }
-                    } else {
-                        $salida = array("codigo" => 0, "mensaje" => "Error al eliminar la imagen de la base de datos.");
-                    }
-                } else {
-                    $salida = array("codigo" => 0, "mensaje" => "Imagen no encontrada.");
-                }
-            }
-            break;
-
-        case 5:
-            // Actualizar restaurante existente
-            if (!empty($id_restauranteEdit)) {
-                $sql = "UPDATE tb_restaurantes SET nombre = :nombre, descripcion_restaurante = :descripcion, 
-                        ubi_restaurante = :direccion, enlace_reservas_rest = :enlace_reservas";
-
-                if (!empty($imgPortada['name'])) {
-                    $imageFileType = strtolower(pathinfo($imgPortada['name'], PATHINFO_EXTENSION));
-                    $newFileName = uniqid('img_', true) . '.' . $imageFileType;
-                    $target_dir_portada = "../upload/restaurantes/portadas/";
-                    $target_file_portada = $target_dir_portada . $newFileName;
-
-                    if (move_uploaded_file($imgPortada['tmp_name'], $target_file_portada)) {
-                        $sql .= ", foto = :imgPortada";
-                    } else {
-                        $salida = array("codigo" => 0, "mensaje" => "Error al subir la nueva imagen de portada.");
-                        break;
-                    }
-                }
-
-                $sql .= " WHERE id_restaurante = :id_restauranteEdit";
-                $ejecutar = $conexion->prepare($sql);
-                $ejecutar->bindParam(':nombre', $nombreRestaurante, PDO::PARAM_STR);
-                $ejecutar->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
-                $ejecutar->bindParam(':direccion', $direccion, PDO::PARAM_STR);
-                $ejecutar->bindParam(':enlace_reservas', $enlace_reservas, PDO::PARAM_STR);
-
-                if (!empty($imgPortada['name'])) {
-                    $ejecutar->bindParam(':imgPortada', $newFileName, PDO::PARAM_STR);
-                }
-
-                $ejecutar->bindParam(':id_restauranteEdit', $id_restauranteEdit, PDO::PARAM_INT);
-                $ejecutar->execute();
-
-                // Procesar nuevas imágenes adicionales si las hay
-                if (!empty($imgRestaurante) && isset($imgRestaurante['name']) && count($imgRestaurante['name']) > 0) {
-                    $filesCount = count($imgRestaurante['name']);
-                    $target_dir_img = "../upload/restaurantes/images/";
-
-                    for ($i = 0; $i < $filesCount; $i++) {
-                        if ($imgRestaurante['error'][$i] == UPLOAD_ERR_OK) {
-                            $imgName = $imgRestaurante['name'][$i];
-                            $imageFileType = strtolower(pathinfo($imgName, PATHINFO_EXTENSION));
-                            $newFileName = uniqid('img_', true) . '.' . $imageFileType;
-                            $target_file_img = $target_dir_img . $newFileName;
-
-                            if (move_uploaded_file($imgRestaurante['tmp_name'][$i], $target_file_img)) {
-                                $sql = "INSERT INTO tb_imgRestaurantes (img, id_restaurante) VALUES (:img, :id_restaurante)";
-                                $ejecutar = $conexion->prepare($sql);
-                                $ejecutar->bindParam(':img', $newFileName, PDO::PARAM_STR);
-                                $ejecutar->bindParam(':id_restaurante', $id_restauranteEdit, PDO::PARAM_INT);
-                                $ejecutar->execute();
-                            }
-                        }
-                    }
-                }
-
-                $salida = array("codigo" => 1, "mensaje" => "Restaurante actualizado correctamente.");
-            } else {
-                $salida = array("codigo" => 0, "mensaje" => "ID de restaurante no proporcionado.");
-            }
-            break;
-
-        case 6:
-            // Eliminar restaurante por ID
-            if (!empty($idrestauranteDelete)) {
-                // Iniciar transacción
+            
+        case 2: // Crear nuevo restaurante
+            try {
                 $conexion->beginTransaction();
                 
-                try {
-                    // Obtener información del restaurante
-                    $sqlRestaurante = "SELECT foto FROM tb_restaurantes WHERE id_restaurante = :idrestaurante";
-                    $ejecutarRestaurante = $conexion->prepare($sqlRestaurante);
-                    $ejecutarRestaurante->bindParam(':idrestaurante', $idrestauranteDelete, PDO::PARAM_INT);
-                    $ejecutarRestaurante->execute();
-                    $restaurante = $ejecutarRestaurante->fetch(PDO::FETCH_ASSOC);
-
-                    if ($restaurante) {
-                        // Eliminar imagen de portada
-                        $rutaPortada = "../upload/restaurantes/portadas/" . $restaurante['foto'];
-                        if (file_exists($rutaPortada)) {
-                            unlink($rutaPortada);
-                        }
-
-                        // Obtener y eliminar imágenes adicionales
-                        $sqlImagenes = "SELECT img FROM tb_imgRestaurantes WHERE id_restaurante = :idrestaurante";
-                        $ejecutarImagenes = $conexion->prepare($sqlImagenes);
-                        $ejecutarImagenes->bindParam(':idrestaurante', $idrestauranteDelete, PDO::PARAM_INT);
-                        $ejecutarImagenes->execute();
-                        $imagenes = $ejecutarImagenes->fetchAll(PDO::FETCH_ASSOC);
-
-                        foreach ($imagenes as $img) {
-                            $rutaImagen = "../upload/restaurantes/images/" . $img['img'];
-                            if (file_exists($rutaImagen)) {
-                                unlink($rutaImagen);
+                // Insertar restaurante
+                $consulta = "INSERT INTO restaurantes (nombre, descripcion, ubi_restaurante, enlace_reservas_rest, id_documento) VALUES (?, ?, ?, ?, ?)";
+                $statement = $conexion->prepare($consulta);
+                $statement->execute([$nombreRestaurante, $descripcion, $direccion, $enlace_reservas, $id_documento]);
+                
+                $lastInsertId = $conexion->lastInsertId();
+                
+                // Procesar imagen de portada
+                if ($imgPortada["error"] == 0) {
+                    $nombre_archivo = uniqid() . "_" . $imgPortada["name"];
+                    $ruta = "../upload/restaurantes/portadas/" . $nombre_archivo;
+                    
+                    if (move_uploaded_file($imgPortada["tmp_name"], $ruta)) {
+                        $consulta = "UPDATE restaurantes SET imgPortada = ? WHERE id_restaurante = ?";
+                        $statement = $conexion->prepare($consulta);
+                        $statement->execute([$nombre_archivo, $lastInsertId]);
+                    }
+                }
+                
+                // Procesar imágenes adicionales
+                if (!empty($imgRestaurante)) {
+                    $consulta = "INSERT INTO imagenes_restaurantes (id_restaurante, img) VALUES (?, ?)";
+                    $statement = $conexion->prepare($consulta);
+                    
+                    foreach($imgRestaurante['tmp_name'] as $key => $tmp_name) {
+                        if ($imgRestaurante['error'][$key] == 0) {
+                            $nombre_archivo = uniqid() . "_" . $imgRestaurante['name'][$key];
+                            $ruta = "../upload/restaurantes/images/" . $nombre_archivo;
+                            
+                            if (move_uploaded_file($tmp_name, $ruta)) {
+                                $statement->execute([$lastInsertId, $nombre_archivo]);
                             }
                         }
-
-                        // Eliminar likes asociados al restaurante
-                        $sqlDeleteLikes = "DELETE FROM tb_like_restaurantes WHERE id_restaurante = :idrestaurante";
-                        $ejecutarDeleteLikes = $conexion->prepare($sqlDeleteLikes);
-                        $ejecutarDeleteLikes->bindParam(':idrestaurante', $idrestauranteDelete, PDO::PARAM_INT);
-                        $ejecutarDeleteLikes->execute();
-
-                        // Eliminar imágenes de la base de datos
-                        $sqlDeleteImagenes = "DELETE FROM tb_imgRestaurantes WHERE id_restaurante = :idrestaurante";
-                        $ejecutarDeleteImagenes = $conexion->prepare($sqlDeleteImagenes);
-                        $ejecutarDeleteImagenes->bindParam(':idrestaurante', $idrestauranteDelete, PDO::PARAM_INT);
-                        $ejecutarDeleteImagenes->execute();
-
-                        // Eliminar el restaurante
-                        $sqlDeleteRestaurante = "DELETE FROM tb_restaurantes WHERE id_restaurante = :idrestaurante";
-                        $ejecutarDeleteRestaurante = $conexion->prepare($sqlDeleteRestaurante);
-                        $ejecutarDeleteRestaurante->bindParam(':idrestaurante', $idrestauranteDelete, PDO::PARAM_INT);
-                        $ejecutarDeleteRestaurante->execute();
-
-                        // Confirmar transacción
-                        $conexion->commit();
-                        $salida = array("codigo" => 1, "mensaje" => "Restaurante eliminado correctamente.");
-                    } else {
-                        $conexion->rollBack();
-                        $salida = array("codigo" => 0, "mensaje" => "Restaurante no encontrado.");
                     }
-                } catch (Exception $e) {
-                    // Si hay error, revertir cambios
-                    $conexion->rollBack();
-                    $salida = array("codigo" => 0, "mensaje" => "Error al eliminar el restaurante: " . $e->getMessage());
                 }
-            } else {
-                $salida = array("codigo" => 0, "mensaje" => "ID de restaurante no proporcionado.");
+                
+                $conexion->commit();
+                $data = ["codigo" => 1, "mensaje" => "Restaurante creado exitosamente"];
+            } catch(Exception $e) {
+                $conexion->rollBack();
+                $data = ["codigo" => 0, "mensaje" => "Error al crear el restaurante: " . $e->getMessage()];
+            }
+            break;
+            
+        case 3: // Obtener información de un restaurante
+            try {
+                // Obtener datos del restaurante
+                $consulta = "SELECT * FROM restaurantes WHERE id_restaurante = ? AND id_documento = ?";
+                $statement = $conexion->prepare($consulta);
+                $statement->execute([$idrestaurante, $id_documento]);
+                $restaurante = $statement->fetch(PDO::FETCH_ASSOC);
+                
+                if ($restaurante) {
+                    // Obtener imágenes del restaurante
+                    $consulta = "SELECT id_img, img FROM imagenes_restaurantes WHERE id_restaurante = ?";
+                    $statement = $conexion->prepare($consulta);
+                    $statement->execute([$idrestaurante]);
+                    $imagenes = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    $restaurante['imagenes'] = $imagenes;
+                    $data = ["codigo" => 1, "data" => $restaurante];
+                } else {
+                    $data = ["codigo" => 0, "mensaje" => "Restaurante no encontrado"];
+                }
+            } catch(Exception $e) {
+                $data = ["codigo" => 0, "mensaje" => "Error al obtener información: " . $e->getMessage()];
+            }
+            break;
+            
+        case 4: // Eliminar imagen
+            try {
+                // Verificar propiedad de la imagen
+                $consulta = "SELECT i.img, r.id_documento 
+                            FROM imagenes_restaurantes i 
+                            JOIN restaurantes r ON i.id_restaurante = r.id_restaurante 
+                            WHERE i.id_img = ?";
+                $statement = $conexion->prepare($consulta);
+                $statement->execute([$idImagen]);
+                $imagen = $statement->fetch(PDO::FETCH_ASSOC);
+                
+                if ($imagen && $imagen['id_documento'] == $id_documento) {
+                    // Eliminar archivo físico
+                    $ruta = "../upload/restaurantes/images/" . $imagen['img'];
+                    if (file_exists($ruta)) {
+                        unlink($ruta);
+                    }
+                    
+                    // Eliminar registro de la base de datos
+                    $consulta = "DELETE FROM imagenes_restaurantes WHERE id_img = ?";
+                    $statement = $conexion->prepare($consulta);
+                    $statement->execute([$idImagen]);
+                    
+                    $data = ["codigo" => 1, "mensaje" => "Imagen eliminada correctamente"];
+                } else {
+                    $data = ["codigo" => 0, "mensaje" => "No se encontró la imagen o no tiene permisos"];
+                }
+            } catch(Exception $e) {
+                $data = ["codigo" => 0, "mensaje" => "Error al eliminar la imagen: " . $e->getMessage()];
+            }
+            break;
+            
+        case 5: // Actualizar restaurante
+            try {
+                $conexion->beginTransaction();
+                
+                // Actualizar información básica
+                $consulta = "UPDATE restaurantes SET 
+                            nombre = ?, 
+                            descripcion = ?, 
+                            ubi_restaurante = ?, 
+                            enlace_reservas_rest = ? 
+                            WHERE id_restaurante = ? AND id_documento = ?";
+                $statement = $conexion->prepare($consulta);
+                $statement->execute([
+                    $nombreRestaurante, 
+                    $descripcion, 
+                    $direccion, 
+                    $enlace_reservas, 
+                    $id_restauranteEdit, 
+                    $id_documento
+                ]);
+                
+                // Actualizar imagen de portada si se proporcionó una nueva
+                if ($imgPortada["error"] == 0) {
+                    // Obtener nombre de la imagen anterior
+                    $consulta = "SELECT imgPortada FROM restaurantes WHERE id_restaurante = ?";
+                    $statement = $conexion->prepare($consulta);
+                    $statement->execute([$id_restauranteEdit]);
+                    $img_anterior = $statement->fetch(PDO::FETCH_ASSOC)['imgPortada'];
+                    
+                    // Eliminar imagen anterior
+                    if ($img_anterior) {
+                        $ruta_anterior = "../upload/restaurantes/portadas/" . $img_anterior;
+                        if (file_exists($ruta_anterior)) {
+                            unlink($ruta_anterior);
+                        }
+                    }
+                    
+                    // Guardar nueva imagen
+                    $nombre_archivo = uniqid() . "_" . $imgPortada["name"];
+                    $ruta = "../upload/restaurantes/portadas/" . $nombre_archivo;
+                    
+                    if (move_uploaded_file($imgPortada["tmp_name"], $ruta)) {
+                        $consulta = "UPDATE restaurantes SET imgPortada = ? WHERE id_restaurante = ?";
+                        $statement = $conexion->prepare($consulta);
+                        $statement->execute([$nombre_archivo, $id_restauranteEdit]);
+                    }
+                }
+                
+                // Procesar nuevas imágenes si se proporcionaron
+                if (!empty($imgRestaurante['name'][0])) {
+                    $consulta = "INSERT INTO imagenes_restaurantes (id_restaurante, img) VALUES (?, ?)";
+                    $statement = $conexion->prepare($consulta);
+                    
+                    foreach($imgRestaurante['tmp_name'] as $key => $tmp_name) {
+                        if ($imgRestaurante['error'][$key] == 0) {
+                            $nombre_archivo = uniqid() . "_" . $imgRestaurante['name'][$key];
+                            $ruta = "../upload/restaurantes/images/" . $nombre_archivo;
+                            
+                            if (move_uploaded_file($tmp_name, $ruta)) {
+                                $statement->execute([$id_restauranteEdit, $nombre_archivo]);
+                            }
+                        }
+                    }
+                }
+                
+                $conexion->commit();
+                $data = ["codigo" => 1, "mensaje" => "Restaurante actualizado exitosamente"];
+            } catch(Exception $e) {
+                $conexion->rollBack();
+                $data = ["codigo" => 0, "mensaje" => "Error al actualizar el restaurante: " . $e->getMessage()];
+            }
+            break;
+            
+        case 6: // Eliminar restaurante
+            try {
+                $conexion->beginTransaction();
+                
+                // Verificar propiedad del restaurante
+                $consulta = "SELECT * FROM restaurantes WHERE id_restaurante = ? AND id_documento = ?";
+                $statement = $conexion->prepare($consulta);
+                $statement->execute([$idRestauranteDelete, $id_documento]);
+                $restaurante = $statement->fetch(PDO::FETCH_ASSOC);
+                
+                if ($restaurante) {
+                    // Eliminar imagen de portada
+                    if ($restaurante['imgPortada']) {
+                        $ruta = "../upload/restaurantes/portadas/" . $restaurante['imgPortada'];
+                        if (file_exists($ruta)) {
+                            unlink($ruta);
+                        }
+                    }
+                    
+                    // Obtener y eliminar imágenes adicionales
+                    $consulta = "SELECT img FROM imagenes_restaurantes WHERE id_restaurante = ?";
+                    $statement = $conexion->prepare($consulta);
+                    $statement->execute([$idRestauranteDelete]);
+                    $imagenes = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    foreach($imagenes as $imagen) {
+                        $ruta = "../upload/restaurantes/images/" . $imagen['img'];
+                        if (file_exists($ruta)) {
+                            unlink($ruta);
+                        }
+                    }
+                    
+                    // Eliminar registros de la base de datos
+                    $consulta = "DELETE FROM imagenes_restaurantes WHERE id_restaurante = ?";
+                    $statement = $conexion->prepare($consulta);
+                    $statement->execute([$idRestauranteDelete]);
+                    
+                    $consulta = "DELETE FROM restaurantes WHERE id_restaurante = ?";
+                    $statement = $conexion->prepare($consulta);
+                    $statement->execute([$idRestauranteDelete]);
+                    
+                    $conexion->commit();
+                    $data = ["codigo" => 1, "mensaje" => "Restaurante eliminado correctamente"];
+                } else {
+                    $data = ["codigo" => 0, "mensaje" => "No se encontró el restaurante o no tiene permisos"];
+                }
+            } catch(Exception $e) {
+                $conexion->rollBack();
+                $data = ["codigo" => 0, "mensaje" => "Error al eliminar el restaurante: " . $e->getMessage()];
             }
             break;
     }
-
-    return $salida;
+    
+    return $data;
 }
-

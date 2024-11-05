@@ -63,11 +63,11 @@ INSERT INTO
         `fecha_ingreso`
     )
 VALUES (
-        '1120964003',
+        '12345678',
         '1',
         'usuario',
         'admin',
-        'robertmoor2003@gmail.com',
+        'robermoor2003@gmail.com',
         '$2y$10$2j2W7jWgkvlGzNhVLa/q5.Llq4MFZMN1iQfaHn/hGuBW7XijMy7qG',
         '22',
         '2024-10-26',
